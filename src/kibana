@@ -17,7 +17,7 @@ KIBANA_DIR=/opt/kibana
 PROGFILE=/opt/kibana/bin/kibana
 
 check() {
-        # Check if elasticsearch is executable
+        # Check if kibana is executable
         test -x $PROGFILE || exit 5
 }
 
