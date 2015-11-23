@@ -1,0 +1,89 @@
+#!/bin/bash
+#
+# kibana
+#
+# chkconfig: 3 70 30
+# description: kibana To view logs
+# processname: kibana
+
+# Source function library.
+. /etc/init.d/functions
+
+RETVAL=0
+prog="kibana"
+LOCKFILE=/var/lock/subsys/$prog
+PIDFILE=/var/run/kibana.pid
+KIBANA_DIR=/opt/kibana
+PROGFILE=/opt/kibana/bin/kibana
+
+check() {
+        # Check if elasticsearch is executable
+        test -x $PROGFILE || exit 5
+}
+
+start() {
+
+        check
+
+        # Check if it is already running
+        if [ ! -f $LOCKFILE ]; then
+            echo -n "Starting $prog ..  "
+            sleep 0.2
+            $PROGFILE -q &
+            RETVAL=$?
+            [ $RETVAL -eq 0 ] && touch $LOCKFILE
+            echo
+            return $RETVAL
+        fi
+        sleep 0.2
+        echo -e "$prog is already running ..."
+}
+
+stop() {
+
+        check
+ 
+        echo -n "Shutting down $prog .. "
+        sleep 1
+        echo
+        if [ -f $PIDFILE ]; then
+                killproc -p $PIDFILE
+                RETVAL=$?
+                [ $RETVAL -eq 0 ] && rm -f $LOCKFILE
+        else
+                echo -e "$prog already is not working"
+        fi
+        return $RETVAL
+}
+
+status() {
+        echo -e "checking status .."
+        if [ -f $PIDFILE ]; then
+                sleep 0.2
+                echo -e "$prog is up .."
+                return $RETVAL
+        fi
+        sleep 0.2
+        echo -e "$prog is not up .."
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: $prog {start|stop|status|restart}"
+        exit 1
+        ;;
+esac
+exit $RETVAL
