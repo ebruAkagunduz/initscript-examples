@@ -1,18 +1,18 @@
 #!/bin/bash
 #
-# kibana
+# logstash
 #
 # chkconfig: 3 70 30
-# description: kibana To view logs
-# processname: kibana
+# description: logstash To parse log
+# processname: logstash
 
 # Source function library.
-. /lib/lsb/init-functions
+. /etc/init.d/functions
 
 RETVAL=0
 prog="logstash"
 LOCKFILE=/var/lock/subsys/$prog
-PIDFILE=/var/run/kibana.pid
+PIDFILE=/var/run/logstash.pid
 LOGSTASH_DIR=/opt/logstash-1.5.4
 PROGFILE=/opt/logstash-1.5.4/bin/logstash
 
